@@ -1,14 +1,52 @@
 package main
 
-import "fmt"
+import (
+	"strconv"
+)
 
-func(app App) toDoListPatch(c Context) {
-	key, ok := c.Vars["id"]
+func(app App) toDoListPatch() Handler {
+	type request struct {
+		text string
+		done bool
+	}
 
-	if ok {
-		fmt.Fprintf(c.Response, "Getting resource %v", key)
-	} else {
-		fmt.Fprintf(c.Response, "There is no key called 'fred'!")
+	return func(c Context) {
+		idString, ok := c.Vars["id"]
+
+		if !ok {
+			app.logger.Println("toDoListPatch() - missing id route parameter")
+			app.Respond(c, nil, 400)
+			return
+		}
+
+		id, err := strconv.Atoi(idString)
+
+		if err != nil {
+			app.logger.Println("toDoListPatch() - badly formatted todo ID =", idString)
+			app.Respond(c, nil, 400)
+			return
+		}
+
+		item, ok := app.tdl.Items[id]
+
+		if !ok {
+			app.Respond(c, nil, 404)
+			return
+		}
+
+		r := request{}
+
+		err = app.Decode(c.Request, &r)
+
+		if err != nil {
+			app.logger.Println("toDoListPatch() - Failed to decode the request JSON")
+			app.Respond(c, nil, 400)
+		}
+
+		item.Done = r.done
+		item.Text = r.text
+
+		app.Respond(c, nil, 201)
 	}
 }
 

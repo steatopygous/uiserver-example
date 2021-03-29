@@ -4,5 +4,7 @@ github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4 h1:Qj1ukM4GlMWXNdMBuXc
 github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4/go.mod h1:N6UoU20jOqggOuDwUaBQpluzLNDqif3kq9z2wpdYEfQ=
 github.com/steatopygous/uiserver v0.1.4 h1:BpY0d4ftnQwrVhbDbHXfnAWTSMlgOnoCF717VGPi1NU=
 github.com/steatopygous/uiserver v0.1.4/go.mod h1:w/SNNyVMeTo7FTt+eWzeQxn9qBtaDxg3xoC2r1EQxPE=
+github.com/steatopygous/uiserver v0.2.0 h1:M4OOg2/B3DpZjljAROVBm9tq/uWgY6PoGzZoHxdzYyo=
+github.com/steatopygous/uiserver v0.2.0/go.mod h1:w/SNNyVMeTo7FTt+eWzeQxn9qBtaDxg3xoC2r1EQxPE=
 golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 h1:64ChN/hjER/taL4YJuA+gpLfIMT+/NFherRZixbxOhg=
 golang.org/x/sys v0.0.0-20210326220804-49726bf1d181/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=

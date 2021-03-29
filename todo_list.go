@@ -2,6 +2,7 @@ package main
 
 import (
   "encoding/json"
+  "errors"
   "fmt"
   "os"
 )
@@ -24,7 +25,7 @@ func NewToDoList(path string) ToDoList {
 
 func(tdl ToDoList) Load() {
   if _, err := os.Stat(tdl.Path); os.IsNotExist(err) {
-    // The file doesn't exist yet.  Create it and leave the list empty.
+    // The file doesn't exist yet.  Create it with the empty list.
 
     tdl.Save()
   } else {
@@ -56,7 +57,7 @@ func(tdl ToDoList) Save() {
   file.Close()
 }
 
-func(tdl ToDoList) Add(text string) {
+func(tdl ToDoList) Add(text string) int {
   id := tdl.NextId
 
   tdl.NextId++
@@ -64,9 +65,22 @@ func(tdl ToDoList) Add(text string) {
   todo := &ToDo{id, text, false}
 
   tdl.Items[id] = todo
+
+  tdl.Save()
+
+  return id
 }
 
-func(tdl ToDoList) Delete(id int) {
-  delete(tdl.Items, id)
+func(tdl ToDoList) Delete(id int) error {
+  _, ok := tdl.Items[id]
+
+  if ok {
+    delete(tdl.Items, id)
+    tdl.Save()
+
+    return nil
+  } else {
+    return errors.New(fmt.Sprintf("there is no item with ID %d", id))
+  }
 }
 

@@ -1,17 +1,15 @@
 package main
 
 type ToDo struct {
-  Id int
-  Text string
-  Done bool
+	Id   int    `json:"id"`
+	Text string `json:"text"`
+	Done bool   `json:"done"`
 }
 
-func(todo ToDo) MarkAsDone() {
-  todo.Done = true
+func (todo ToDo) MarkAsDone() {
+	todo.Done = true
 }
 
-func(todo ToDo) MarkAsPending() {
-  todo.Done = false
+func (todo ToDo) MarkAsPending() {
+	todo.Done = false
 }
-
-

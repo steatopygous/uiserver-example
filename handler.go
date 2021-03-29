@@ -1,9 +1,8 @@
 package main
 
-type Handler interface {
-	ServerHTTP(context Context)
-}
+import "github.com/steatopygous/uiserver"
 
+type Handler = uiserver.Handler
 type HandlerFunc func(context Context)
 
 func(hf HandlerFunc) ServeHTTP(context Context) {
