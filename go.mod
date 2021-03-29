@@ -4,6 +4,6 @@ go 1.16
 
 require (
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
-	github.com/steatopygous/uiserver v0.2.0 // indirect
+	github.com/steatopygous/uiserver v0.3.0
 	golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 // indirect
 )
