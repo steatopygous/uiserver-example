@@ -11,6 +11,8 @@ type App struct {
 	logger *log.Logger
 }
 
+type Handler = uiserver.Handler
+
 func createRoutes(server uiserver.UIServer, toDoListPath string, logger *log.Logger) {
 	tdl := NewToDoList(toDoListPath)
 	app := App{tdl, logger}
