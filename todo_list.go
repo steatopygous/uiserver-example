@@ -8,7 +8,7 @@ import (
 )
 
 type ToDoList struct {
-  Path string
+  path   string
   NextId int
   Items map[int]*ToDo
 }
@@ -24,15 +24,15 @@ func NewToDoList(path string) ToDoList {
 }
 
 func(tdl ToDoList) Load() {
-  if _, err := os.Stat(tdl.Path); os.IsNotExist(err) {
+  if _, err := os.Stat(tdl.path); os.IsNotExist(err) {
     // The file doesn't exist yet.  Create it with the empty list.
 
     tdl.Save()
   } else {
-    file, err := os.Open(tdl.Path)
+    file, err := os.Open(tdl.path)
 
     if err != nil {
-      panic(fmt.Sprintf("failed to open todo list file %s - %v", tdl.Path, err))
+      panic(fmt.Sprintf("failed to open todo list file %s - %v", tdl.path, err))
     }
 
     decoder := json.NewDecoder(file)
@@ -46,7 +46,7 @@ func(tdl ToDoList) Load() {
 }
 
 func(tdl ToDoList) Save() {
-  file, _ := os.Create(tdl.Path)
+  file, _ := os.Create(tdl.path)
 
   encoder := json.NewEncoder(file)
 
