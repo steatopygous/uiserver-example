@@ -6,10 +6,6 @@ import (
 
 // toDoListPatch() updates the done status of the specified item, if it exists.
 func(app App) toDoListPatch() Handler {
-	type request struct {
-		done bool
-	}
-
 	return func(c Context) {
 		idString, ok := c.Vars["id"]
 
@@ -27,23 +23,32 @@ func(app App) toDoListPatch() Handler {
 			return
 		}
 
-		item, ok := app.tdl.Items[id]
+		tdl := app.tdl
+
+		item, ok := tdl.Items[id]
 
 		if !ok {
+			app.logger.Println("toDoListPatch() - no item exists with requested ID", idString)
 			app.Respond(c, nil, 404)
 			return
 		}
 
-		r := request{}
+		// Make a copy of the item and decode the request over the top of it, which
+		// will update any fields provided, but leave everything else alone.
 
-		err = app.Decode(c.Request, &r)
+		newItem := *item
+
+		err = app.Decode(c.Request, &newItem)
 
 		if err != nil {
 			app.logger.Println("toDoListPatch() - Failed to decode the request JSON")
 			app.Respond(c, nil, 400)
 		}
 
-		item.Done = r.done
+		// Replace the existing item with the updated one and save the list
+
+		tdl.Items[id] = &newItem
+		tdl.Save()
 
 		app.Respond(c, nil, 201)
 	}
