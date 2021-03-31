@@ -45,6 +45,10 @@ func(app App) toDoListPatch() Handler {
 			app.Respond(c, nil, 400)
 		}
 
+		// In case the caller attempts to change the ID
+
+		newItem.Id = item.Id
+
 		// Replace the existing item with the updated one and save the list
 
 		tdl.Items[id] = &newItem
