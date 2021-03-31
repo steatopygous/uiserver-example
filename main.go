@@ -2,13 +2,14 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"time"
 
-	"github.com/steatopygous/uiserver"
-
 	"github.com/pkg/browser"
+	"github.com/steatopygous/uiserver"
 )
 
 //go:embed ui/*
@@ -21,9 +22,16 @@ func main() {
 
 	createRoutes(server, path, logger)
 
-	go openBrowser()
+	//go openDefaultBrowser()
+	go openChromeWindow()
 
-	server.Run(":1234")
+	err := server.Run(":1234")
+
+	if err != nil {
+		fmt.Println("uiServer.Run() returned an error...", err)
+	}
+
+	fmt.Println("Hmmm... we shouldn't get to here!")
 }
 
 func createLogger() *log.Logger {
@@ -40,9 +48,19 @@ func createLogger() *log.Logger {
 type Context = uiserver.Context // An alias to make writing REST handlers a little more succinct
 
 
-func openBrowser() {
+func openChromeWindow() {
+	chrome := "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+	app := "--app=http://localhost:1234/"
+	position := "--window-position=500,50"
+	size := "--window-size=900,1200"
+
+	time.Sleep(100 * time.Millisecond)
+
+	exec.Command(chrome, app, position, size).Start()
+}
+
+func openDefaultBrowser() {
 	time.Sleep(100 * time.Millisecond)
 
 	browser.OpenURL("http://localhost:1234/")
 }
-

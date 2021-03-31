@@ -19,7 +19,7 @@ func createRoutes(server uiserver.UIServer, toDoListPath string, logger *log.Log
 
 	server.Get("/api/todos", app.toDoListGetAll())
 
-	server.Post("/api/todos/purge", app.toDoListPurgePost())
+	//server.Post("/api/todos/purge", app.toDoListPurgePost())
 	server.Post("/api/todos", app.toDoListPost())
 
 	server.Get("/api/todos/{id}", app.toDoListGetItem())
