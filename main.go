@@ -15,14 +15,22 @@ import (
 //go:embed ui/*
 var ui embed.FS
 
+type App struct {
+	tdl ToDoList
+	logger *log.Logger
+	preferences Preferences
+}
+
 func main() {
 	server := uiserver.New(ui)
 	path := os.Args[1]
 	logger := createLogger()
-
-	createRoutes(server, path, logger)
-
 	preferences := LoadPreferences()
+	tdl := NewToDoList(path)
+
+	app := App{tdl, logger, preferences}
+
+	app.createRoutes(server)
 
 	//go openDefaultBrowser()
 	go openChromeWindow(preferences)

@@ -1,22 +1,12 @@
 package main
 
 import (
-	"log"
-
 	"github.com/steatopygous/uiserver"
 )
 
-type App struct {
-	tdl ToDoList
-	logger *log.Logger
-}
-
 type Handler = uiserver.Handler
 
-func createRoutes(server uiserver.UIServer, toDoListPath string, logger *log.Logger) {
-	tdl := NewToDoList(toDoListPath)
-	app := App{tdl, logger}
-
+func(app App) createRoutes(server uiserver.UIServer) {
 	server.Get("/api/todos", app.toDoListGetAll())
 
 	//server.Post("/api/todos/purge", app.toDoListPurgePost())
