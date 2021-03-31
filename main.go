@@ -22,8 +22,10 @@ func main() {
 
 	createRoutes(server, path, logger)
 
+	preferences := LoadPreferences()
+
 	//go openDefaultBrowser()
-	go openChromeWindow()
+	go openChromeWindow(preferences)
 
 	err := server.Run(":1234")
 
@@ -48,11 +50,12 @@ func createLogger() *log.Logger {
 type Context = uiserver.Context // An alias to make writing REST handlers a little more succinct
 
 
-func openChromeWindow() {
+func openChromeWindow(preferences Preferences) {
 	chrome := "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 	app := "--app=http://localhost:1234/"
-	position := "--window-position=500,50"
-	size := "--window-size=900,1200"
+
+	position := fmt.Sprintf("--window-position=%d,%d", preferences.position.x, preferences.position.y)
+	size := fmt.Sprintf("--window-size=%d,%d", preferences.size.width, preferences.size.height)
 
 	time.Sleep(100 * time.Millisecond)
 
