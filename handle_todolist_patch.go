@@ -4,9 +4,9 @@ import (
 	"strconv"
 )
 
+// toDoListPatch() updates the done status of the specified item, if it exists.
 func(app App) toDoListPatch() Handler {
 	type request struct {
-		text string
 		done bool
 	}
 
@@ -44,7 +44,6 @@ func(app App) toDoListPatch() Handler {
 		}
 
 		item.Done = r.done
-		item.Text = r.text
 
 		app.Respond(c, nil, 201)
 	}

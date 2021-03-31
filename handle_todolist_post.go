@@ -1,5 +1,6 @@
 package main
 
+// toDoListPurgePost() handles purging of items that have been marked as done
 func(app App) toDoListPurgePost() Handler {
 	return func(c Context) {
 		app.tdl.Purge()
@@ -7,6 +8,7 @@ func(app App) toDoListPurgePost() Handler {
 	}
 }
 
+// toDoListPost() handles creation of new todo items
 func(app App) toDoListPost() Handler {
 	type request struct {
 		text string

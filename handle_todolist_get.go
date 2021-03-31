@@ -5,12 +5,14 @@ import (
 	"strconv"
 )
 
+// toDoListGetAll() returns all of the items in the list.
 func(app App) toDoListGetAll() Handler {
 	return func(c Context) {
 		app.Respond(c, app.tdl.Items, 200)
 	}
 }
 
+// toDoListGetItem() returns the item with the specified ID, if it exists.
 func(app App) toDoListGetItem() Handler {
 	return func(c Context) {
 		idString, ok := c.Vars["id"]

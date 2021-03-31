@@ -4,6 +4,7 @@ import (
 	"strconv"
 )
 
+// toDoListDelete() handles deletion of a todo item
 func(app App) toDoListDelete() Handler {
 	return func(c Context) {
 		idString, ok := c.Vars["id"]
