@@ -1,5 +1,12 @@
 package main
 
+func(app App) toDoListPurgePost() Handler {
+	return func(c Context) {
+		app.tdl.Purge()
+		app.Respond(c, nil, 201)
+	}
+}
+
 func(app App) toDoListPost() Handler {
 	type request struct {
 		text string
