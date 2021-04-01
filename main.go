@@ -23,10 +23,12 @@ type App struct {
 
 func main() {
 	server := uiserver.New(ui)
+
 	path := os.Args[1]
+	tdl := NewToDoList(path)
+
 	logger := createLogger()
 	preferences := LoadPreferences()
-	tdl := NewToDoList(path)
 
 	app := App{tdl, logger, preferences}
 
@@ -62,12 +64,14 @@ func openChromeWindow(preferences Preferences) {
 	chrome := "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 	app := "--app=http://localhost:1234/"
 
-	position := fmt.Sprintf("--window-position=%d,%d", preferences.position.x, preferences.position.y)
-	size := fmt.Sprintf("--window-size=%d,%d", preferences.size.width, preferences.size.height)
+	position := fmt.Sprintf("--window-position=%d,%d", preferences.Position.X, preferences.Position.Y)
+	size := fmt.Sprintf("--window-size=%d,%d", preferences.Size.Width, preferences.Size.Height)
 
 	time.Sleep(100 * time.Millisecond)
 
-	exec.Command(chrome, app, position, size).Start()
+	exec.Command(chrome, app, position, size).Run()
+
+	os.Exit(0)
 }
 
 func openDefaultBrowser() {

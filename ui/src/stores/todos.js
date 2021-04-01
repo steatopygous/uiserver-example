@@ -102,12 +102,12 @@ function createTodos() {
     async function loadItems() {
         const response = await fetch('/api/todos');
 
-        console.log('stores.js loadItems() - response.ok =', response.ok);
+        console.log('todos.js loadItems() - response.ok =', response.ok);
 
         if (response.ok) {
             items = await response.json();
 
-            console.log('stores.js loadItems() - items =', items);
+            console.log('todos.js loadItems() - items =', items);
 
             set(items);
         }

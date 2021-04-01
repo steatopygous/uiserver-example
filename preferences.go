@@ -8,29 +8,29 @@ import (
 	"path/filepath"
 )
 
-type Browser int
+type BrowserType int
 
 const (
-	Chrome Browser = iota
+	Chrome BrowserType = iota
 	Edge
 	Firefox
 	Safari
 )
 
 type WindowSize struct {
-	width int
-	height int
+	Width int
+	Height int
 }
 
 type WindowPosition struct {
-	x int
-	y int
+	X int
+	Y int
 }
 
 type Preferences struct {
-	browser  Browser
-	position WindowPosition
-	size     WindowSize
+	Browser  BrowserType
+	Position WindowPosition
+	Size     WindowSize
 }
 
 func LoadPreferences() Preferences {
@@ -60,7 +60,7 @@ func LoadPreferences() Preferences {
 	return preferences
 }
 
-func SavePreferences(preferences Preferences) error {
+func(preferences *Preferences) Save() error {
 	path, err := preferencesPath()
 
 	if err != nil {
@@ -71,7 +71,7 @@ func SavePreferences(preferences Preferences) error {
 
 	encoder := json.NewEncoder(writer)
 
-	err = encoder.Encode(&preferences)
+	err = encoder.Encode(preferences)
 
 	if err != nil {
 		fmt.Println("SavePreferences() - failed to write preferences to", path, "...", err)
@@ -94,4 +94,10 @@ func preferencesPath() (string, error) {
 
 func defaultPreferences() Preferences {
 	return Preferences{Chrome, WindowPosition{400, 100}, WindowSize{700, 900}}
+}
+
+func(preferences *Preferences) setWindowSize(size WindowSize) {
+	preferences.Size = size
+
+	preferences.Save()
 }

@@ -1,5 +1,6 @@
 <script>
-    import { todos } from './stores.js';
+    import { todos } from './stores/todos.js';
+    import { preferences } from './stores/preferences.js';
 
     $: ids = Object.keys($todos);
 
@@ -7,6 +8,11 @@
 
     $: done = ids.filter(id => $todos[id].done);
     $: pending = ids.filter(id => !$todos[id].done);
+
+    let outerWidth;
+    let outerHeight;
+
+    $: setWindowSize(outerWidth, outerHeight);
 
     function addItem() {
         todos.add(text);
@@ -21,7 +27,17 @@
     function purge() {
         todos.purge();
     }
+
+    function setWindowSize(outerWidth, outerHeight) {
+        if (outerWidth !== undefined) {
+            console.log('setWindowSize() - outerWidth =', outerWidth, 'outerHeight =', outerHeight);
+
+            preferences.setWindowSize(outerWidth, outerHeight);
+        }
+    }
 </script>
+
+<svelte:window bind:outerWidth={outerWidth} bind:outerHeight={outerHeight} />
 
 <main>
     <h1>Todos</h1>

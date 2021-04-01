@@ -15,6 +15,8 @@ func(app App) createRoutes(server *uiserver.UIServer) {
 	server.Get("/api/todos/{id}", app.toDoListGetItem())
 	server.Patch("/api/todos/{id}", app.toDoListPatch())
 	server.Delete("/api/todos/{id}", app.toDoListDelete())
+
+	server.Patch("/api/preferences", app.preferencesPatch())
 }
 
 
