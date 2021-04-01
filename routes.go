@@ -6,10 +6,10 @@ import (
 
 type Handler = uiserver.Handler
 
-func(app App) createRoutes(server uiserver.UIServer) {
+func(app App) createRoutes(server *uiserver.UIServer) {
 	server.Get("/api/todos", app.toDoListGetAll())
 
-	//server.Post("/api/todos/purge", app.toDoListPurgePost())
+	server.Post("/api/todos/purge", app.toDoListPurgePost())
 	server.Post("/api/todos", app.toDoListPost())
 
 	server.Get("/api/todos/{id}", app.toDoListGetItem())

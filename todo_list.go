@@ -17,7 +17,7 @@ type ToDoList struct {
 
 // NewToDoList() creates a new ToDoList and loads its content from the JSON file, if it exists
 func NewToDoList(path string) ToDoList {
-	var items map[int]*ToDo
+	var items = map[int]*ToDo{}
 
 	tdl := ToDoList{path, 0, items}
 
@@ -27,7 +27,7 @@ func NewToDoList(path string) ToDoList {
 }
 
 // Load() sets the list to the content of the JSON file
-func (tdl ToDoList) Load() {
+func (tdl *ToDoList) Load() {
 	if _, err := os.Stat(tdl.path); os.IsNotExist(err) {
 		// The file doesn't exist yet.  Create it with the empty list.
 
@@ -63,7 +63,7 @@ func (tdl ToDoList) Save() {
 }
 
 // Add() creates a new todo item with the provided text and adds it to the list
-func (tdl ToDoList) Add(text string) int {
+func (tdl *ToDoList) Add(text string) int {
 	id := tdl.NextId
 
 	tdl.NextId++
@@ -78,7 +78,7 @@ func (tdl ToDoList) Add(text string) int {
 }
 
 // Delete() removes the todo item with the given ID
-func (tdl ToDoList) Delete(id int) error {
+func (tdl *ToDoList) Delete(id int) error {
 	_, ok := tdl.Items[id]
 
 	if ok {
@@ -92,7 +92,7 @@ func (tdl ToDoList) Delete(id int) error {
 }
 
 // Purge() removes all todo items that are marked as done
-func (tdl ToDoList) Purge() {
+func (tdl *ToDoList) Purge() {
 	var done  []int
 
 	for id, todo := range tdl.Items {

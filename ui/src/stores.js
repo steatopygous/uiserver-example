@@ -3,7 +3,9 @@ import { writable } from 'svelte/store'
 export const todos = createTodos();
 
 function createTodos() {
-    const { subscribe, update } = writable({});
+    let items = {};
+
+    const { subscribe, set, update } = writable(items);
 
     loadItems();
 
@@ -44,7 +46,7 @@ function createTodos() {
             });
 
             if (response.ok) {
-                update(items => {
+                update(_ => {
                     items[id].done = !items[id].done;
 
                     return items;
@@ -56,7 +58,7 @@ function createTodos() {
             const body = { id };
 
             const response = await fetch(`/api/todos/${id}`, {
-                method: 'PATCH',
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -64,28 +66,50 @@ function createTodos() {
             });
 
             if (response.ok) {
-                update(items => {
+                update(_ => {
                     delete items[id];
 
                     return items;
                 });
             }
-        }
+        },
+
+        async purge() {
+            const body = {};
+
+            const response = await fetch(`/api/todos/purge`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (response.ok) {
+                update(_ => {
+                    const done = Object.keys(items).filter(id => items[id].done);
+
+                    for (let id of done) {
+                        delete items[id];
+                    }
+
+                    return items;
+                });
+            }
+        },
     };
 
     async function loadItems() {
-        console.log('stores.js loadItems()');
-
         const response = await fetch('/api/todos');
 
         console.log('stores.js loadItems() - response.ok =', response.ok);
 
         if (response.ok) {
-            const items = await response.json();
+            items = await response.json();
 
             console.log('stores.js loadItems() - items =', items);
 
-            update(_ => items);
+            set(items);
         }
     }
 }

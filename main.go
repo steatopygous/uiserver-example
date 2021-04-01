@@ -30,7 +30,7 @@ func main() {
 
 	app := App{tdl, logger, preferences}
 
-	app.createRoutes(server)
+	app.createRoutes(&server)
 
 	//go openDefaultBrowser()
 	go openChromeWindow(preferences)

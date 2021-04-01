@@ -11,11 +11,11 @@ func(app App) toDoListPurgePost() Handler {
 // toDoListPost() handles creation of new todo items
 func(app App) toDoListPost() Handler {
 	type request struct {
-		text string
+		Text string `json:"text"`
 	}
 
 	type response struct {
-		id int
+		Id int `json:"id"`
 	}
 
 	return func(c Context) {
@@ -29,7 +29,7 @@ func(app App) toDoListPost() Handler {
 			return
 		}
 
-		id := app.tdl.Add(r.text)
+		id := app.tdl.Add(r.Text)
 
 		app.Respond(c, response{id}, 200)
 	}

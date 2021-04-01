@@ -1,7 +1,7 @@
 <script>
     import { todos } from './stores.js';
 
-    let ids = Object.keys($todos);
+    $: ids = Object.keys($todos);
 
     let text = '';
 
@@ -13,11 +13,20 @@
 
         text = '';
     }
+
+    function toggle(id) {
+        todos.toggle(id);
+    }
+
+    function purge() {
+        todos.purge();
+    }
 </script>
 
 <main>
     <h1>Todos</h1>
 
+    <button on:click={purge}>Purge</button>
     <div>
         <input type="text" bind:value={text} />
         <button on:click={addItem}>Add</button>
@@ -25,17 +34,19 @@
 
     <div class="todos">
         <div class="list">
+            <h3>Pending</h3>
             <ul>
-            {#each done as item}
-                <li>{item.text}
+            {#each pending as id}
+                <li on:click={() => toggle(id)}>{$todos[id].text}
             {/each}
             </ul>
         </div>
 
         <div class="list">
+            <h3>Done</h3>
             <ul>
-            {#each pending as item}
-                <li>{item.text}
+            {#each done as id}
+                <li on:click={() => toggle(id)}>{$todos[id].text}
             {/each}
             </ul>
         </div>
@@ -59,11 +70,14 @@
     .todos {
 	    display: flex;
 	    flex-direction: row;
-	    align-items: center;
+        justify-content: center;
+        width: 100%;
     }
 
     .list {
-        width: 500px;
+        display: flex;
+        justify-items: start;
+        width: 300px;
     }
 
 	h1 {
