@@ -12,7 +12,7 @@ import (
 	"github.com/steatopygous/uiserver"
 )
 
-//go:embed ui/*
+//go:embed ui/public/*
 var ui embed.FS
 
 type App struct {
