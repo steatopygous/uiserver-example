@@ -2,6 +2,8 @@
     import { todos } from './stores/todos.js';
     import { preferences } from './stores/preferences.js';
 
+    import ItemList from './ItemList.svelte';
+
     $: ids = Object.keys($todos);
 
     let text = '';
@@ -15,13 +17,13 @@
     $: setWindowSize(outerWidth, outerHeight);
 
     function addItem() {
-        todos.add(text);
+        text = text.trim();
 
-        text = '';
-    }
+        if (text.length > 0) {
+            todos.add(text);
 
-    function toggle(id) {
-        todos.toggle(id);
+            text = '';
+        }
     }
 
     function purge() {
@@ -35,38 +37,33 @@
             preferences.setWindowSize(outerWidth, outerHeight);
         }
     }
+
+    function keyUp(e) {
+        if (e.code === 'Enter') {
+            addItem();
+        }
+    }
 </script>
 
-<svelte:window bind:outerWidth={outerWidth} bind:outerHeight={outerHeight} />
+<svelte:window
+        bind:outerWidth={outerWidth} bind:outerHeight={outerHeight}
+        on:keyup={keyUp}
+/>
 
 <main>
     <h1>Todos</h1>
 
-    <button on:click={purge}>Purge</button>
     <div>
         <input type="text" bind:value={text} />
         <button on:click={addItem}>Add</button>
     </div>
 
-    <div class="todos">
-        <div class="list">
-            <h3>Pending</h3>
-            <ul>
-            {#each pending as id}
-                <li on:click={() => toggle(id)}>{$todos[id].text}
-            {/each}
-            </ul>
-        </div>
-
-        <div class="list">
-            <h3>Done</h3>
-            <ul>
-            {#each done as id}
-                <li on:click={() => toggle(id)}>{$todos[id].text}
-            {/each}
-            </ul>
-        </div>
+    <div class="lists">
+        <ItemList heading="Pending" items={pending} />
+        <ItemList heading="Complete" items={done} />
     </div>
+
+    <button on:click={purge}>Purge</button>
 </main>
 
 <style>
@@ -83,17 +80,11 @@
         display: inline-block;
     }
 
-    .todos {
+    .lists {
 	    display: flex;
 	    flex-direction: row;
         justify-content: center;
         width: 100%;
-    }
-
-    .list {
-        display: flex;
-        justify-items: start;
-        width: 300px;
     }
 
 	h1 {
@@ -101,7 +92,11 @@
 	    padding-top: 0;
 		color: #ff3e00;
 		text-transform: uppercase;
-		font-size: 4em;
+		font-size: 3em;
 		font-weight: 100;
 	}
+
+    button {
+        margin-top: 10px;
+    }
 </style>
