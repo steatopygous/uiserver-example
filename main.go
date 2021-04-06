@@ -2,13 +2,11 @@ package main
 
 import (
 	"embed"
+	"flag"
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
-	"time"
 
-	"github.com/pkg/browser"
 	"github.com/steatopygous/uiserver"
 )
 
@@ -16,16 +14,31 @@ import (
 var ui embed.FS
 
 type App struct {
-	tdl ToDoList
-	logger *log.Logger
+	tdl         ToDoList
+	logger      *log.Logger
 	preferences Preferences
 }
 
+var help = flag.Bool("help", false, "display available command-line flags")
+var path = flag.String("json", "./todos.json", "path to the todos JSON file")
+var port = flag.Int("port", 1234, "port the server will run on")
+var display = flag.String("display", "tab", "tab | chrome")
+
 func main() {
+	flag.Parse()
+
+	if *help {
+		flag.PrintDefaults();
+		return
+	}
+
+	todos()
+}
+
+func todos() {
 	server := uiserver.New(ui)
 
-	path := os.Args[1]
-	tdl := NewToDoList(path)
+	tdl := NewToDoList(*path)
 
 	logger := createLogger()
 	preferences := LoadPreferences()
@@ -34,10 +47,11 @@ func main() {
 
 	app.createRoutes(&server)
 
-	//go openDefaultBrowser()
-	go openChromeWindow(preferences)
+	openUI(preferences)
 
-	err := server.Run(":1234")
+	listenOn := fmt.Sprintf(":%d", *port)
+
+	err := server.Run(listenOn)
 
 	if err != nil {
 		fmt.Println("uiServer.Run() returned an error...", err)
@@ -47,35 +61,14 @@ func main() {
 }
 
 func createLogger() *log.Logger {
-	file, err := os.OpenFile("logs.txt", os.O_APPEND | os.O_CREATE | os.O_WRONLY, 0666)
+	file, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return log.New(file, "", log.Ldate | log.Ltime | log.Lshortfile)
+	return log.New(file, "", log.Ldate|log.Ltime|log.Lshortfile)
 }
-
 
 type Context = uiserver.Context // An alias to make writing REST handlers a little more succinct
 
-
-func openChromeWindow(preferences Preferences) {
-	chrome := "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-	app := "--app=http://localhost:1234/"
-
-	position := fmt.Sprintf("--window-position=%d,%d", preferences.Position.X, preferences.Position.Y)
-	size := fmt.Sprintf("--window-size=%d,%d", preferences.Size.Width, preferences.Size.Height)
-
-	time.Sleep(100 * time.Millisecond)
-
-	exec.Command(chrome, app, position, size).Run()
-
-	os.Exit(0)
-}
-
-func openDefaultBrowser() {
-	time.Sleep(100 * time.Millisecond)
-
-	browser.OpenURL("http://localhost:1234/")
-}
