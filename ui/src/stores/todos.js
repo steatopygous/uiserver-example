@@ -54,7 +54,7 @@ function createTodos() {
             }
         },
 
-        async delete(id) {
+        async remove(id) {
             const body = { id };
 
             const response = await fetch(`/api/todos/${id}`, {

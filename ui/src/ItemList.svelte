@@ -1,39 +1,101 @@
 <script>
     import {todos} from "./stores/todos";
+    import {crossfade} from "svelte/transition";
+    import {quintOut} from "svelte/easing";
+    import { flip } from 'svelte/animate';
 
     export let heading;
     export let items;
 
+    const [send, receive] = crossfade({
+        duration: d => Math.sqrt(d * 200),
+
+        fallback(node, params) {
+            const style = getComputedStyle(node);
+            const transform = style.transform === 'none' ? '' : style.transform;
+
+            return {
+                duration: 600,
+                easing: quintOut,
+                css: t => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`
+            };
+        }
+    });
+
     function toggle(id) {
         todos.toggle(id);
     }
+
+    function remove(id) {
+        todos.remove(id);
+    }
 </script>
 
-<div class="list">
-    <h3>{heading}</h3>
-    <ul>
-        {#each items as id}
-            <li on:click={() => toggle(id)}>{$todos[id].text}
-        {/each}
-    </ul>
-</div>
+<h2>{heading}</h2>
+{#each items as id (id)}
+    <label
+        class:done={$todos[id].done}
+        in:receive="{{key: id}}"
+        out:send="{{key: id}}"
+        animate:flip
+    >
+        <input type=checkbox checked={$todos[id].done} on:change={() => toggle(id)}>
+            {$todos[id].text}
+        <button on:click={() => remove(id)}>remove</button>
+    </label>
+{/each}
 
 <style>
-    .list {
-        display: flex;
-        flex-direction: column;
-        justify-items: start;
-
-        padding-left: 10px;
-        width: 200px;
+    h2 {
+        font-size: 2em;
+        font-weight: 200;
+        user-select: none;
+        margin: 0 0 0.5em 0;
     }
 
-    ul {
-        padding-left: 0;
+    label {
+        position: relative;
+        line-height: 1.2;
+        padding: 0.5em 2.5em 0.5em 2em;
+        margin: 0 0 0.5em 0;
+        border-radius: 2px;
+        user-select: none;
+        border: 1px solid hsl(240, 8%, 70%);
+        background-color:hsl(240, 8%, 93%);
+        color: #333;
     }
 
-    li {
-        list-style-type: none;
-        padding-left: 0;
+    input[type="checkbox"] {
+        position: absolute;
+        left: 0.5em;
+        top: 0.6em;
+        margin: 0;
+    }
+
+    button {
+        position: absolute;
+        top: 0;
+        right: 0.2em;
+        width: 2em;
+        height: 100%;
+        background: no-repeat 50% 50% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23676778' d='M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M17,7H14.5L13.5,6H10.5L9.5,7H7V9H17V7M9,18H15A1,1 0 0,0 16,17V10H8V17A1,1 0 0,0 9,18Z'%3E%3C/path%3E%3C/svg%3E");
+        background-size: 1.4em 1.4em;
+        border: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+        text-indent: -9999px;
+        cursor: pointer;
+    }
+
+    label:hover button {
+        opacity: 1;
+    }
+
+    .done {
+        border: 1px solid hsl(240, 8%, 90%);
+        background-color:hsl(240, 8%, 98%);
     }
 </style>

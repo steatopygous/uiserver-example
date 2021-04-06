@@ -1,12 +1,13 @@
 <script>
+    import { quintOut } from 'svelte/easing';
+    import { crossfade } from 'svelte/transition';
+
     import { todos } from './stores/todos.js';
     import { preferences } from './stores/preferences.js';
 
-    import ItemList from './ItemList.svelte';
+    import ItemList from './ItemList.svelte'
 
     $: ids = Object.keys($todos);
-
-    let text = '';
 
     $: done = ids.filter(id => $todos[id].done);
     $: pending = ids.filter(id => !$todos[id].done);
@@ -16,13 +17,13 @@
 
     $: setWindowSize(outerWidth, outerHeight);
 
-    function addItem() {
-        text = text.trim();
+    function addItem(target) {
+        const text = target.value.trim();
 
         if (text.length > 0) {
             todos.add(text);
 
-            text = '';
+            target.value = '';
         }
     }
 
@@ -37,66 +38,34 @@
             preferences.setWindowSize(outerWidth, outerHeight);
         }
     }
-
-    function keyUp(e) {
-        if (e.code === 'Enter') {
-            addItem();
-        }
-    }
 </script>
 
-<svelte:window
-        bind:outerWidth={outerWidth} bind:outerHeight={outerHeight}
-        on:keyup={keyUp}
-/>
+<div class='board'>
+    <input
+        placeholder="What needs to be done?"
+        on:keydown={e => e.key === 'Enter' && addItem(e.target)}
+    >
 
-<main>
-    <h1>Todos</h1>
-
-    <div>
-        <input type="text" bind:value={text} />
-        <button on:click={addItem}>Add</button>
+    <div class='left'>
+        <ItemList heading="Pending" items={pending}/>
     </div>
 
-    <div class="lists">
-        <ItemList heading="Pending" items={pending} />
-        <ItemList heading="Complete" items={done} />
+    <div class='right'>
+        <ItemList heading="Completed" items={done}/>
     </div>
-
-    <button on:click={purge}>Purge</button>
-</main>
+</div>
 
 <style>
-	main {
-	    display: flex;
-	    flex-direction: column;
-	    align-items: center;
-        width: 100%;
-        padding-top: 0;
-        margin-top: 0;
-	}
-
-    input {
-        display: inline-block;
+    .board {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 1em;
+        max-width: 36em;
+        margin: 0 auto;
     }
 
-    .lists {
-	    display: flex;
-	    flex-direction: row;
-        justify-content: center;
-        width: 100%;
-    }
-
-	h1 {
-	    margin-top: 0;
-	    padding-top: 0;
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 3em;
-		font-weight: 100;
-	}
-
-    button {
-        margin-top: 10px;
+    .board > input {
+        font-size: 1.4em;
+        grid-column: 1/3;
     }
 </style>
