@@ -6,6 +6,7 @@ import (
 
 type Handler = uiserver.Handler
 
+// createRoutes() adds all of the routes + REST verb combinations to the server
 func(app App) createRoutes(server *uiserver.UIServer) {
 	server.Get("/api/todos", app.toDoListGetAll())
 

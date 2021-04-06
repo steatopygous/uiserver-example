@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/browser"
 )
 
+// openUI() opens the preferred browser, pointing to the todo list server
 func openUI(preferences Preferences) {
 	switch *display {
 	case "tab":
@@ -23,11 +24,12 @@ func openUI(preferences Preferences) {
 	}
 }
 
+// openChromeWindow() attempts to open Chrome as an app, pointing to the todo list server
 func openChromeWindow(preferences Preferences) {
 	chrome := chromePath()
 	app := fmt.Sprintf("--app=%s", serverUrl())
 
-	position := fmt.Sprintf("--window-position=%d,%d", preferences.Position.X, preferences.Position.Y)
+	position := "--window-position=200,100"
 	size := fmt.Sprintf("--window-size=%d,%d", preferences.Size.Width, preferences.Size.Height)
 
 	time.Sleep(100 * time.Millisecond)
@@ -40,6 +42,7 @@ func openChromeWindow(preferences Preferences) {
 	}
 }
 
+// chromePath() returns the path to the Chrome executable, based on the OS
 func chromePath() string {
 	if runtime.GOOS == "windows" {
 		return "chrome.exe"
@@ -48,6 +51,7 @@ func chromePath() string {
 	}
 }
 
+// opeDefaultBrowserTab() attempts to open a tab in the default browser, pointing to the todo list server
 func openDefaultBrowserTab() {
 	time.Sleep(100 * time.Millisecond)
 
@@ -59,6 +63,7 @@ func openDefaultBrowserTab() {
 	}
 }
 
+// serverUrl() returns the URL for the todo list server
 func serverUrl() string {
 	return fmt.Sprintf("http://localhost:%d/", *port)
 }

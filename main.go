@@ -28,20 +28,21 @@ func main() {
 	flag.Parse()
 
 	if *help {
-		flag.PrintDefaults();
+		flag.PrintDefaults()
 		return
 	}
 
 	todos()
 }
 
+// todos() starts the server and opens the UI
 func todos() {
 	server := uiserver.New(ui)
 
 	tdl := NewToDoList(*path)
 
 	logger := createLogger()
-	preferences := LoadPreferences()
+	preferences := Load()
 
 	app := App{&tdl, logger, preferences}
 
@@ -60,6 +61,7 @@ func todos() {
 	fmt.Println("Hmmm... we shouldn't get to here!")
 }
 
+// createLogger() creates a simple logger for errors
 func createLogger() *log.Logger {
 	file, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 

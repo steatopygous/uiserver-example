@@ -8,22 +8,20 @@ import (
 	"path/filepath"
 )
 
+// WindowSize represents the width and height of the window (used when running Chrome as an app)
 type WindowSize struct {
 	Width int
 	Height int
 }
 
-type WindowPosition struct {
-	X int
-	Y int
-}
-
+// Preferences represents the user's preferences, to be used next time the app is loaded
 type Preferences struct {
-	Position WindowPosition
 	Size     WindowSize
 }
 
-func LoadPreferences() Preferences {
+
+// Load() loads the user's preferences
+func Load() Preferences {
 	path, err := preferencesPath()
 
 	if err != nil {
@@ -43,13 +41,15 @@ func LoadPreferences() Preferences {
 	err = decoder.Decode(&preferences)
 
 	if err != nil {
-		fmt.Println("LoadPreferences() - preferences file", path, "could not be parsed")
+		fmt.Println("Load() - preferences file", path, "could not be parsed")
 		return defaultPreferences()
 	}
 
 	return preferences
 }
 
+
+// Save() saves the user's preferences to disk, in their home directory
 func(preferences *Preferences) Save() error {
 	path, err := preferencesPath()
 
@@ -71,6 +71,8 @@ func(preferences *Preferences) Save() error {
 	return nil
 }
 
+
+// preferencesPath() returns the path to the preferences file
 func preferencesPath() (string, error) {
 	user, err := user.Current()
 
@@ -82,10 +84,14 @@ func preferencesPath() (string, error) {
 	return filepath.FromSlash(user.HomeDir + "/.uiserver-example.json"), nil
 }
 
+
+// defaultPreferences() returns a set of default preferences
 func defaultPreferences() Preferences {
-	return Preferences{WindowPosition{400, 100}, WindowSize{700, 900}}
+	return Preferences{WindowSize{700, 900}}
 }
 
+
+// setWindowSize() updates the window size in the preferences and saves them to disk
 func(preferences *Preferences) setWindowSize(size WindowSize) {
 	preferences.Size = size
 
