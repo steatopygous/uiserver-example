@@ -54,7 +54,7 @@ func openDefaultBrowserTab() {
 	err := browser.OpenURL(serverUrl())
 
 	if err != nil {
-		fmt.Println("openDefaultBrowserTab() - Failed to open a tab on the default browser...", err)
+		fmt.Println("openDefaultBrowserTab() - Failed to open a tab in the default browser...", err)
 		os.Exit(-1)
 	}
 }
