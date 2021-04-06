@@ -47,10 +47,14 @@ func (tdl *ToDoList) Load() {
 
 		file.Close()
 	}
+
+	fmt.Println("todo_list.go Load() - tdl.NextId =", tdl.NextId)
 }
 
 // Save() dumps the current content of the list to the associated JSON file
 func (tdl ToDoList) Save() {
+	fmt.Println("todo_list.go Save() - tdl.NextId =", tdl.NextId)
+
 	file, _ := os.Create(tdl.path)
 
 	encoder := json.NewEncoder(file)
@@ -66,7 +70,9 @@ func (tdl ToDoList) Save() {
 func (tdl *ToDoList) Add(text string) int {
 	id := tdl.NextId
 
-	tdl.NextId++
+	tdl.NextId = tdl.NextId + 1
+
+	fmt.Println("todo_list.go Load() - after adding tdl.NextId =", tdl.NextId)
 
 	todo := &ToDo{id, text, false}
 
@@ -83,6 +89,7 @@ func (tdl *ToDoList) Delete(id int) error {
 
 	if ok {
 		delete(tdl.Items, id)
+
 		tdl.Save()
 
 		return nil

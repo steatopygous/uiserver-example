@@ -14,7 +14,7 @@ import (
 var ui embed.FS
 
 type App struct {
-	tdl         ToDoList
+	tdl         *ToDoList
 	logger      *log.Logger
 	preferences Preferences
 }
@@ -43,7 +43,7 @@ func todos() {
 	logger := createLogger()
 	preferences := LoadPreferences()
 
-	app := App{tdl, logger, preferences}
+	app := App{&tdl, logger, preferences}
 
 	app.createRoutes(&server)
 

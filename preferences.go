@@ -8,15 +8,6 @@ import (
 	"path/filepath"
 )
 
-type BrowserType int
-
-const (
-	Chrome BrowserType = iota
-	Edge
-	Firefox
-	Safari
-)
-
 type WindowSize struct {
 	Width int
 	Height int
@@ -28,7 +19,6 @@ type WindowPosition struct {
 }
 
 type Preferences struct {
-	Browser  BrowserType
 	Position WindowPosition
 	Size     WindowSize
 }
@@ -93,7 +83,7 @@ func preferencesPath() (string, error) {
 }
 
 func defaultPreferences() Preferences {
-	return Preferences{Chrome, WindowPosition{400, 100}, WindowSize{700, 900}}
+	return Preferences{WindowPosition{400, 100}, WindowSize{700, 900}}
 }
 
 func(preferences *Preferences) setWindowSize(size WindowSize) {
