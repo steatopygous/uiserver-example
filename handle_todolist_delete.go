@@ -24,7 +24,7 @@ func(app App) toDoListDelete() Handler {
 		}
 
 		app.tdl.Delete(id)
-		app.Respond(c, nil, 201)
+		app.Respond(c, nil, 204)
 	}
 }
 

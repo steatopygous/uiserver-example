@@ -54,7 +54,7 @@ func(app App) toDoListPatch() Handler {
 		tdl.Items[id] = &newItem
 		tdl.Save()
 
-		app.Respond(c, nil, 201)
+		app.Respond(c, nil, 204)
 	}
 }
 

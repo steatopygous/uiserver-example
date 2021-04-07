@@ -20,6 +20,6 @@ func(app App) preferencesPatch() Handler {
 
 		app.preferences.setWindowSize(WindowSize{r.Width, r.Height})
 
-		app.Respond(c, nil, 201)
+		app.Respond(c, nil, 204)
 	}
 }
