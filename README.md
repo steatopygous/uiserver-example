@@ -44,8 +44,8 @@ but fine for an example app, to avoid having a dependency on some kind of databa
 
 Note that __uiserver__ is intended to provide a single-user app over local data.
 While there is nothing stopping us from opening multiple browser tabs displaying
-the UI, changes made in one will not be reflected in others unless their browser
-tabs are refreshed.
+the UI, changes made in one will not be reflected in others unless they are
+refreshed.
 
 ## The Client
 
