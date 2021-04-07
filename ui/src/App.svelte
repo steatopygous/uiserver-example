@@ -1,7 +1,4 @@
 <script>
-    import { quintOut } from 'svelte/easing';
-    import { crossfade } from 'svelte/transition';
-
     import { todos } from './stores/todos.js';
     import { preferences } from './stores/preferences.js';
 
@@ -47,11 +44,11 @@
     >
 
     <div class='left'>
-        <ItemList heading="Pending" items={pending}/>
+        <ItemList heading="Pending" items={pending} />
     </div>
 
     <div class='right'>
-        <ItemList heading="Completed" items={done}/>
+        <ItemList heading="Completed" items={done} showPurgeButton={true} />
     </div>
 </div>
 
