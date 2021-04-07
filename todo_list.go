@@ -29,7 +29,9 @@ func NewToDoList(path string) ToDoList {
 // Load() sets the list to the content of the JSON file
 func (tdl *ToDoList) Load() {
 	if _, err := os.Stat(tdl.path); os.IsNotExist(err) {
-		// The file doesn't exist yet.  Create it with the empty list.
+		// The file doesn't exist yet.  Create it with some example values.
+
+		tdl.addExampleItems()
 
 		tdl.Save()
 	} else {
@@ -63,12 +65,12 @@ func (tdl ToDoList) Save() {
 }
 
 // Add() creates a new todo item with the provided text and adds it to the list
-func (tdl *ToDoList) Add(text string) int {
+func (tdl *ToDoList) Add(text string, done bool) int {
 	id := tdl.NextId
 
 	tdl.NextId++
 
-	todo := &ToDo{id, text, false}
+	todo := &ToDo{id, text, done}
 
 	tdl.Items[id] = todo
 
@@ -107,4 +109,16 @@ func (tdl *ToDoList) Purge() {
 	}
 
 	tdl.Save()
+}
+
+// addExampleItems() adds a few items to the list
+func (tdl *ToDoList) addExampleItems() {
+	tdl.Add("Extend the example app", false)
+	tdl.Add("Use a SQL database", false)
+	tdl.Add("Use a NoSQL database", false)
+	tdl.Add("Synchronise across tabs", false)
+
+	tdl.Add("Learn Go", true)
+	tdl.Add("Learn Svelte", true)
+	tdl.Add("Build an example app", true)
 }

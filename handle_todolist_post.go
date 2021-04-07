@@ -29,7 +29,7 @@ func(app App) toDoListPost() Handler {
 			return
 		}
 
-		id := app.tdl.Add(r.Text)
+		id := app.tdl.Add(r.Text, false)
 
 		app.Respond(c, response{id}, 200)
 	}
