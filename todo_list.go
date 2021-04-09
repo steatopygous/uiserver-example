@@ -21,13 +21,13 @@ func NewToDoList(path string) ToDoList {
 
 	tdl := ToDoList{path, 0, items}
 
-	tdl.Load()
+	tdl.load()
 
 	return tdl
 }
 
 // Load() sets the list to the content of the JSON file
-func (tdl *ToDoList) Load() {
+func (tdl *ToDoList) load() {
 	if _, err := os.Stat(tdl.path); os.IsNotExist(err) {
 		// The file doesn't exist yet.  Create it with some example values.
 
@@ -52,7 +52,7 @@ func (tdl *ToDoList) Load() {
 }
 
 // Save() dumps the current content of the list to the associated JSON file
-func (tdl ToDoList) Save() {
+func (tdl *ToDoList) Save() {
 	file, _ := os.Create(tdl.path)
 
 	encoder := json.NewEncoder(file)
